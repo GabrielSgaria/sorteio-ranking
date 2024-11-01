@@ -1,0 +1,41 @@
+datasource db {
+  provider = "postgresql"
+  url      = env("DATABASE_URL")
+}
+
+generator client {
+  provider = "prisma-client-js"
+}
+
+model Company {
+  id        String   @id @default(cuid())
+  name      String
+  subdomain String   @unique
+  clients   Client[]
+}
+
+model Client {
+  id           String     @id @default(cuid())
+  name         String
+  cpf          String     @unique
+  totalSpent   Float
+  lastPurchase DateTime
+  companyId    String
+  company      Company    @relation(fields: [companyId], references: [id])
+  Purchase     Purchase[]
+}
+
+model Purchase {
+  id       String   @id @default(cuid())
+  clientId String
+  client   Client   @relation(fields: [clientId], references: [id])
+  date     DateTime
+  amount   Float
+}
+
+model User {
+  id    String  @id @default(cuid())
+  email String  @unique
+  name  String?
+  plan  String  @default("basic")
+}
