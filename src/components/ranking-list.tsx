@@ -1,40 +1,45 @@
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar"
 
 type Client = {
   id: string
   name: string
   cpf: string
   totalSpent: number
-  lastPurchase: Date
+  lastPurchase: string
 }
 
 export default function RankingList({ clients }: { clients: Client[] }) {
-  if (!clients) return <div>Carregando...</div>
-
   return (
-    <div>
-      <h2 className="text-2xl font-bold mb-4">Ranking</h2>
-      <table className="min-w-full bg-white">
-        <thead>
-          <tr>
-            <th className="py-2 px-4 border-b">Posição</th>
-            <th className="py-2 px-4 border-b">Nome</th>
-            <th className="py-2 px-4 border-b">CPF</th>
-            <th className="py-2 px-4 border-b">Total Gasto</th>
-            <th className="py-2 px-4 border-b">Última Compra</th>
-          </tr>
-        </thead>
-        <tbody>
-          {clients.map((client, index) => (
-            <tr key={client.id}>
-              <td className="py-2 px-4 border-b">{index + 1}</td>
-              <td className="py-2 px-4 border-b">{client.name}</td>
-              <td className="py-2 px-4 border-b">{client.cpf}</td>
-              <td className="py-2 px-4 border-b">R$ {client.totalSpent.toFixed(2)}</td>
-              <td className="py-2 px-4 border-b">{new Date(client.lastPurchase).toLocaleDateString()}</td>
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
+    <Table>
+      <TableHeader>
+        <TableRow>
+          <TableHead className="w-[50px]">Pos.</TableHead>
+          <TableHead>Cliente</TableHead>
+          <TableHead>CPF</TableHead>
+          <TableHead className="text-right">Total Gasto</TableHead>
+          <TableHead className="text-right">Última Compra</TableHead>
+        </TableRow>
+      </TableHeader>
+      <TableBody>
+        {clients.map((client, index) => (
+          <TableRow key={client.id}>
+            <TableCell className="font-medium">{index + 1}</TableCell>
+            <TableCell>
+              <div className="flex items-center">
+                <Avatar className="h-8 w-8 mr-2">
+                  <AvatarImage src={`https://api.dicebear.com/6.x/initials/svg?seed=${client.name}`} alt={client.name} />
+                  <AvatarFallback>{client.name.charAt(0)}</AvatarFallback>
+                </Avatar>
+                {client.name}
+              </div>
+            </TableCell>
+            <TableCell>{client.cpf}</TableCell>
+            <TableCell className="text-right">R$ {client.totalSpent.toFixed(2)}</TableCell>
+            <TableCell className="text-right">{new Date(client.lastPurchase).toLocaleDateString()}</TableCell>
+          </TableRow>
+        ))}
+      </TableBody>
+    </Table>
   )
 }

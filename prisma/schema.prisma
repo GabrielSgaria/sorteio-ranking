@@ -17,12 +17,15 @@ model Company {
 model Client {
   id           String     @id @default(cuid())
   name         String
-  cpf          String     @unique
-  totalSpent   Float
+  cpf          String
+  phone        String
+  totalSpent   Float      @default(0)
   lastPurchase DateTime
   companyId    String
   company      Company    @relation(fields: [companyId], references: [id])
   Purchase     Purchase[]
+
+  @@unique([cpf, companyId])
 }
 
 model Purchase {
